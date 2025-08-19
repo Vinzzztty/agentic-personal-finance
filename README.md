@@ -68,3 +68,6 @@
   export OLLAMA_MODEL=llama3
   ```
 
+## Lisensi 📄
+Proyek ini menggunakan lisensi MIT. Lihat file `LICENSE` untuk detail selengkapnya.
+
