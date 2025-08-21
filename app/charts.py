@@ -54,6 +54,26 @@ def timeseries_daily_total(df: pd.DataFrame) -> alt.Chart:
     return chart
 
 
+def timeseries_weekly_total(df: pd.DataFrame) -> alt.Chart:
+    safe = df.copy()
+    if "tanggal" in safe.columns:
+        safe["tanggal"] = pd.to_datetime(safe["tanggal"], errors="coerce")
+    safe = safe[safe["tanggal"].notna() & safe["total"].notna()]
+    weekly = (
+        safe.set_index("tanggal").resample("W")["total"].sum().reset_index()
+    )
+    chart = (
+        alt.Chart(weekly)
+        .mark_line(point=True)
+        .encode(
+            x=alt.X("tanggal:T", title="Minggu"),
+            y=alt.Y("total:Q", title="Total"),
+            tooltip=["tanggal:T", "total:Q"],
+        )
+    )
+    return chart
+
+
 def timeseries_monthly_total(df: pd.DataFrame) -> alt.Chart:
     safe = df.copy()
     if "tanggal" in safe.columns:
