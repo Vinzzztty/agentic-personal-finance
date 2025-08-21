@@ -64,9 +64,11 @@ def _system_prompt() -> str:
 
 
 def _context_from_df(df: pd.DataFrame) -> str:
-    preview = df.head(10).to_string(index=False)
+    # Show complete dataset instead of just preview
+    complete_data = df.to_string(index=False)
     schema = ", ".join([f"{c}({df[c].dtype})" for c in df.columns])
-    return f"Data schema: {schema}\n\nPreview (first 10 rows):\n{preview}"
+    total_rows = len(df)
+    return f"Data schema: {schema}\n\nComplete dataset ({total_rows} rows):\n{complete_data}"
 
 
 def start_session(df: pd.DataFrame, model: Optional[str] = None) -> ChatSession:
