@@ -1,64 +1,43 @@
-# Panduan Rilis (Release Guide)
+# Release Process
 
-Dokumen ini menjelaskan alur rilis versi proyek menggunakan penandaan (git tag) dan catatan rilis. Disarankan alur sederhana berbasis `main` + tag.
+## Versioning
+- Gunakan SemVer: `MAJOR.MINOR.PATCH` (misal: `0.1.1`).
+- Phase 1: `v0.1.1`
+- Phase 2: `v0.2.0`
+- Phase 3: `v0.3.0`
 
-## Penamaan Versi
-- Gunakan SemVer: `MAJOR.MINOR.PATCH` (misal: `0.1.0`).
-- Contoh:
-  - Phase 1: `v0.1.0`
-  - Patch/hotfix: `v0.1.1`, `v0.1.2`, dst.
+## Release Checklist
 
-## Checklist Pra-Rilis
-- [ ] Aplikasi berjalan: `streamlit run app.py`
-- [ ] Data dapat dimuat dari Google Sheet yang publik
-- [ ] Visualisasi tampil tanpa error (pie, time series, bar)
-- [ ] Chat (opsional) berfungsi jika Ollama aktif
-- [ ] `README.md` dan `CONTRIBUTING.md` diperbarui
-- [ ] Versi di `pyproject.toml` sudah sesuai (contoh: `0.1.0`)
+### Pre-release
+- [ ] Semua fitur sudah selesai dan tested
+- [ ] Dokumentasi sudah lengkap
+- [ ] Versi di `pyproject.toml` sudah sesuai (contoh: `0.1.1`)
+- [ ] Changelog sudah diupdate
+- [ ] Branch sudah di-merge ke main
 
-## Langkah Rilis
-1. Pastikan `main` terbaru
-   ```bash
-   git checkout main
-   git pull
-   ```
-2. Set versi rilis di `pyproject.toml` (contoh Phase 1 → `0.1.0`)
-3. Commit perubahan versi (jika ada)
+### Release Steps
+1. Update versi di `pyproject.toml`
+2. Set versi rilis di `pyproject.toml` (contoh Phase 1 → `0.1.1`)
+3. Commit perubahan versi:
    ```bash
    git add pyproject.toml
-   git commit -m "chore(release): set version 0.1.0"
+   git commit -m "chore(release): set version 0.1.1"
    ```
-4. Buat tag rilis dan dorong ke remote
+4. Buat git tag:
    ```bash
-   git tag -a v0.1.0 -m "Phase 1 release"
-   git push origin v0.1.0
+   git tag -a v0.1.1 -m "Phase 1 release"
+   git push origin v0.1.1
    ```
-5. Buat GitHub Release dari tag `v0.1.0` dengan catatan rilis (lihat template di bawah)
+5. Buat GitHub Release dari tag `v0.1.1` dengan catatan rilis (lihat template di bawah)
 
-## Setelah Rilis (Persiapan Pengembangan Berikutnya)
-- Naikkan versi pengembangan di `pyproject.toml` (mis. `0.2.0-dev`) di `main`:
-  ```bash
-  git checkout main
-  # ubah versi → 0.2.0-dev
-  git add pyproject.toml
-  git commit -m "chore: bump version to 0.2.0-dev"
-  git push
-  ```
+### Post-release
+- [ ] Update dokumentasi jika diperlukan
+- [ ] Update changelog untuk versi berikutnya
+- [ ] Notifikasi tim tentang rilis
 
-## Hotfix (Opsional)
-Jika perlu patch untuk versi rilis:
-- Buat branch rilis (hanya jika ekspektasi ada beberapa patch)
-  ```bash
-  git checkout -b release/v0.1.x
-  git push -u origin release/v0.1.x
-  ```
-- Alur hotfix:
-  - `hotfix/<deskripsi>` → PR ke `release/v0.1.x`
-  - Tag patch baru (mis. `v0.1.1`) dari `release/v0.1.x`
-  - Merge/cherry-pick perubahan ke `main`
+## Release Template
 
-## Template Catatan Rilis
-Judul: Phase 1 — v0.1.0
+### Phase 1 — v0.1.1
 
 Ringkasan:
 - Memuat data Google Sheet via `.env`
