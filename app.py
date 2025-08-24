@@ -459,10 +459,38 @@ def main():
 
     prompt = st.chat_input("Tanyakan tentang datamu...")
     if prompt:
+        # Display user message
         st.chat_message("user").markdown(prompt)
-        answer = ask_with_memory(session, prompt)
-        st.chat_message("assistant").markdown(answer)
-
+        
+        # Create a placeholder for the assistant response
+        with st.chat_message("assistant"):
+            message_placeholder = st.empty()
+            
+            # Show loading indicator
+            with st.spinner("🤔 AI sedang menganalisis data..."):
+                # Initialize response accumulator
+                full_response = ""
+                
+                def stream_callback(content: str, is_complete: bool = False):
+                    """Callback function for streaming updates"""
+                    nonlocal full_response
+                    if not is_complete:
+                        full_response += content
+                        # Update the placeholder with accumulated content
+                        message_placeholder.markdown(full_response + "▌")
+                    else:
+                        # Final update without cursor
+                        message_placeholder.markdown(full_response)
+                
+                try:
+                    # Use streaming if available, fallback to regular if not
+                    from app.llm import ask_with_memory_streaming
+                    answer = ask_with_memory_streaming(session, prompt, stream_callback)
+                except ImportError:
+                    # Fallback to non-streaming
+                    from app.llm import ask_with_memory
+                    answer = ask_with_memory(session, prompt)
+                    message_placeholder.markdown(answer)
 
 
 if __name__ == "__main__":
